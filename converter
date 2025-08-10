@@ -1,0 +1,33 @@
+import requests
+
+API_URL = "https://api.exchangerate.host/convert"
+
+def convert_currency(amount, from_currency, to_currency):
+    """Convert currency using exchangerate.host API."""
+    try:
+        response = requests.get(API_URL, params={
+            "from": from_currency.upper(),
+            "to": to_currency.upper(),
+            "amount": amount
+        })
+        data = response.json()
+        if data.get("success"):
+            return data["result"]
+        else:
+            print("Error:", data)
+            return None
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+
+if __name__ == "__main__":
+    print("=== Currency Converter ===")
+    amount = float(input("Enter amount: "))
+    from_currency = input("From currency (e.g., USD): ")
+    to_currency = input("To currency (e.g., EUR): ")
+
+    result = convert_currency(amount, from_currency, to_currency)
+    if result is not None:
+        print(f"{amount} {from_currency.upper()} = {result:.2f} {to_currency.upper()}")
+    else:
+        print("Conversion failed.")
